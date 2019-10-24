@@ -12,9 +12,9 @@ func main() {
 		os.Exit(1)
 	}
 	q := os.Args[1]
-	tweets := allSearch(q)
+	tweets := AllSearch(q)
 
-	err := mkFile(tweets)
+	err := MkFile(tweets)
 	if err != nil {
 		os.Exit(1)
 	}

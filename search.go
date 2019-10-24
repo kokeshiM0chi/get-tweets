@@ -1,4 +1,4 @@
-package main
+package lib
 
 import (
 	"fmt"
@@ -22,8 +22,8 @@ func search(api *anaconda.TwitterApi, maxId int64, q string) (sr anaconda.Search
 	return sr, nil
 }
 
-func allSearch(q string) (tweets []anaconda.Tweet) {
-	api := authorize()
+func AllSearch(q string) (tweets []anaconda.Tweet) {
+	api := Authorize()
 	var maxId int64 = 1
 	for {
 		sr, err := search(api, maxId, q)
@@ -44,7 +44,9 @@ func allSearch(q string) (tweets []anaconda.Tweet) {
 	fmt.Printf("取得ツイート数:%d\n", len(tweets))
 	fmt.Println("取得したツイートに対するリプライを取得しています")
 	for _, tweet := range tweets {
-		d = replyDfs(api, tweet)
+		// ユーザーID宛のリプライを検索
+		// q := fmt.Sprintf("to:%v", super.User.ScreenName)
+		d = ReplyDfs(api, tweet, q)
 	}
 	fmt.Println("リプライをすべて取得しました")
 	fmt.Printf("取得ツイート数:%d\n", len(tweets))

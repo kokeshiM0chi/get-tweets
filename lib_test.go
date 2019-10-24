@@ -1,9 +1,9 @@
 package lib_test
 
 import (
-	"testing"
-	"github.com/ChimeraCoder/anaconda"
 	"get-tweets/lib"
+	"github.com/ChimeraCoder/anaconda"
+	"testing"
 )
 
 func Test_removeDuplicate(t *testing.T) {

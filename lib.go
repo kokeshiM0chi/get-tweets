@@ -10,7 +10,7 @@ import (
 	"time"
 )
 
-func authorize() *anaconda.TwitterApi {
+func Authorize() *anaconda.TwitterApi {
 	anaconda.SetConsumerKey(consumerKey)
 	anaconda.SetConsumerSecret(consumerSecret)
 	return anaconda.NewTwitterApi(accessToken, accessTokenSecret)
@@ -34,7 +34,7 @@ func mkDir(jsonDir string) error {
 	return nil
 }
 
-func mkFile(tweets []anaconda.Tweet) error {
+func MkFile(tweets []anaconda.Tweet) error {
 	err := mkDir(jsonDir)
 	if err != nil {
 		fmt.Printf("ディレクトリ作成に失敗しました. err:%s\n", err)
@@ -59,28 +59,6 @@ func mkFile(tweets []anaconda.Tweet) error {
 		file.Write(json)
 	}
 	return nil
-}
-
-func replyDfs(api *anaconda.TwitterApi, super anaconda.Tweet) (allReplies []anaconda.Tweet) {
-	// ユーザーID宛のリプライを検索
-	q := fmt.Sprintf("to:%v", super.User.ScreenName)
-	var maxId int64 = 1
-	sr, err := search(api, maxId, q)
-	var subs []anaconda.Tweet
-	for _, s := range sr.Statuses {
-		if s.InReplyToStatusID == super.Id {
-			subs = append(subs, s)
-		}
-	}
-	if len(subs) != 0 {
-		allReplies = append(allReplies, subs...)
-	} else {
-		return nil
-	}
-	for _, sub := range subs {
-		allReplies = append(allReplies, replyDfs(api, sub)...)
-	}
-	return allReplies
 }
 
 func removeDuplicate(tweets []anaconda.Tweet) (distinctTweets []anaconda.Tweet) {
