@@ -1,10 +1,9 @@
-package main
+package lib
 
 import (
 	"encoding/json"
 	"fmt"
 	"github.com/ChimeraCoder/anaconda"
-	"net/url"
 	"os"
 	"os/user"
 	"path/filepath"
@@ -63,16 +62,10 @@ func mkFile(tweets []anaconda.Tweet) error {
 }
 
 func replyDfs(api *anaconda.TwitterApi, super anaconda.Tweet) (allReplies []anaconda.Tweet) {
-	stmt := fmt.Sprintf("to:%v", super.User.ScreenName)
-	v := url.Values{}
-	v.Set("since_id", super.IdStr)
-	v.Set("count", "100")
-	sr, err := api.GetSearch(stmt, v)
-	if err != nil {
-		fmt.Println("error to GetSearch")
-		return nil
-	}
-
+	// ユーザーID宛のリプライを検索
+	q := fmt.Sprintf("to:%v", super.User.ScreenName)
+	var maxId int64 = 1
+	sr, err := search(api, maxId, q)
 	var subs []anaconda.Tweet
 	for _, s := range sr.Statuses {
 		if s.InReplyToStatusID == super.Id {
@@ -84,9 +77,20 @@ func replyDfs(api *anaconda.TwitterApi, super anaconda.Tweet) (allReplies []anac
 	} else {
 		return nil
 	}
-
 	for _, sub := range subs {
 		allReplies = append(allReplies, replyDfs(api, sub)...)
 	}
 	return allReplies
+}
+
+func removeDuplicate(tweets []anaconda.Tweet) (distinctTweets []anaconda.Tweet) {
+	m := make(map[int64]struct{})
+	for _, tweet := range tweets {
+		// mapでは、第二引数にその値が入っているかどうかの真偽値が入っている
+		if _, ok := m[tweet.Id]; !ok {
+			m[tweet.Id] = struct{}{}
+			distinctTweets = append(distinctTweets, tweet)
+		}
+	}
+	return distinctTweets
 }

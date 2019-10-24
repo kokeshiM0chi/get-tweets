@@ -12,5 +12,11 @@ func main() {
 		os.Exit(1)
 	}
 	q := os.Args[1]
-	allSearch(q)
+	tweets := allSearch(q)
+
+	err := mkFile(tweets)
+	if err != nil {
+		os.Exit(1)
+	}
+	fmt.Println("取得したツイート群をファイルに書き込みました")
 }
