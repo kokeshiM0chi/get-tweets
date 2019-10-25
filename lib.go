@@ -10,7 +10,7 @@ import (
 	"time"
 )
 
-func authorize() *anaconda.TwitterApi {
+func Authorize() *anaconda.TwitterApi {
 	anaconda.SetConsumerKey(consumerKey)
 	anaconda.SetConsumerSecret(consumerSecret)
 	return anaconda.NewTwitterApi(accessToken, accessTokenSecret)
@@ -34,29 +34,35 @@ func mkDir(jsonDir string) error {
 	return nil
 }
 
-func MkFile(tweets []anaconda.Tweet) error {
-	err := mkDir(jsonDir)
-	if err != nil {
+func MkFiles(tweets []anaconda.Tweet) error {
+	if err := mkDir(jsonDir); err != nil {
 		fmt.Printf("ディレクトリ作成に失敗しました. err:%s\n", err)
 	}
 	for i, tweet := range tweets {
-		json, err := json.MarshalIndent(tweet, "", "    ")
+		err := func() error {
+			json, err := json.MarshalIndent(tweet, "", "    ")
+			if err != nil {
+				fmt.Printf("jsonのMarshalIndent失敗. err:%s\n", err)
+				return err
+			}
+			t := time.Now()
+			file, err := os.Create(filepath.Join(
+				jsonDir, fmt.Sprintf(
+					"%v%v%v-%v%vtimeline%d.json",
+					t.Year(), t.Month(), t.Day(), t.Hour(), t.Minute(), i,
+				),
+			))
+			if err != nil {
+				fmt.Printf("ファイル作成失敗. err:%s\n", err)
+				return err
+			}
+			file.Write(json)
+			defer file.Close()
+			return nil
+		}()
 		if err != nil {
-			fmt.Printf("jsonのMarshalIndent失敗. err:%s\n", err)
 			return err
 		}
-		t := time.Now()
-		file, err := os.Create(filepath.Join(
-			jsonDir, fmt.Sprintf(
-				"%v%v%v-%v%v%vtimeline%d.json",
-				t.Year(), t.Month(), t.Day(), t.Hour(), t.Minute(), t.Second(), i,
-			),
-		))
-		if err != nil {
-			fmt.Printf("ファイル作成失敗. err:%s\n", err)
-			return err
-		}
-		file.Write(json)
 	}
 	return nil
 }
@@ -71,3 +77,28 @@ func removeDuplicate(tweets []anaconda.Tweet) (distinctTweets []anaconda.Tweet) 
 	}
 	return distinctTweets
 }
+
+// func MkFile(tweet anaconda.Tweet, i int64) error {
+// 	if err := mkDir(jsonDir); err != nil {
+// 		fmt.Printf("ディレクトリ作成に失敗しました. err:%s\n", err)
+// 	}
+// 	json, err := json.MarshalIndent(tweet, "", "    ")
+// 	if err != nil {
+// 		fmt.Printf("jsonのMarshalIndent失敗. err:%s\n", err)
+// 		return err
+// 	}
+// 	t := time.Now()
+// 	file, err := os.Create(filepath.Join(
+// 		jsonDir, fmt.Sprintf(
+// 			"%v%v%v-%v%vtimeline%d.json",
+// 			t.Year(), t.Month(), t.Day(), t.Hour(), t.Minute(), i,
+// 		),
+// 	))
+// 	if err != nil {
+// 		fmt.Printf("ファイル作成失敗. err:%s\n", err)
+// 		return err
+// 	}
+// 	file.Write(json)
+// 	defer file.Close()
+// 	return nil
+// }

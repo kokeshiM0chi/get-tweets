@@ -22,10 +22,10 @@ func search(api *anaconda.TwitterApi, maxId int64, q string) (sr anaconda.Search
 	return sr, nil
 }
 
-func AllSearch(q string) (tweets []anaconda.Tweet) {
-	api := authorize()
+func AllSearch(api *anaconda.TwitterApi, q string) (tweets []anaconda.Tweet) {
 	var maxId int64 = 1
 	for {
+		fmt.Println(maxId)
 		sr, err := search(api, maxId, q)
 		if err != nil {
 			fmt.Printf("検索失敗. err:%v\n", err)
@@ -40,16 +40,18 @@ func AllSearch(q string) (tweets []anaconda.Tweet) {
 		maxId = sr.Statuses[len(sr.Statuses)-1].Id - 1 //statuses末尾取得
 		tweets = append(tweets, sr.Statuses...)
 	}
-	var d []anaconda.Tweet
 	fmt.Printf("取得ツイート数:%d\n", len(tweets))
 	fmt.Println("取得したツイートに対するリプライを取得しています")
 	for _, tweet := range tweets {
-		// ユーザーID宛のリプライを検索
-		// q := fmt.Sprintf("to:%v", super.User.ScreenName)
-		d = ReplyDfs(api, tweet, q)
+		// ユーザーIDに宛てられたリプライを検索
+		q := fmt.Sprintf("to:%v", tweet.User.ScreenName)
+		repTweets := ReplyDfs(api, tweet, q)
+		if len(repTweets) != 0 {
+			tweets = append(tweets, repTweets...)
+		}
 	}
-	fmt.Println("リプライをすべて取得しました")
-	fmt.Printf("取得ツイート数:%d\n", len(tweets))
-	tweets = append(tweets, d...)
+	fmt.Printf("リプライをすべて取得しました。取得ツイート数:%d\n", len(tweets))
+	tweets = removeDuplicate(tweets)
+	fmt.Printf("重複削除後のツイート数:%d\n", len(tweets))
 	return tweets
 }

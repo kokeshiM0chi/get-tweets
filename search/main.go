@@ -13,10 +13,11 @@ func main() {
 		fmt.Println("e.g. ./twitter-search abc")
 		os.Exit(1)
 	}
+	api := lib.Authorize()
 	q := os.Args[1]
-	tweets := lib.AllSearch(q)
+	tweets := lib.AllSearch(api, q)
 
-	err := lib.MkFile(tweets)
+	err := lib.MkFiles(tweets)
 	if err != nil {
 		os.Exit(1)
 	}
