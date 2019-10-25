@@ -23,7 +23,7 @@ func search(api *anaconda.TwitterApi, maxId int64, q string) (sr anaconda.Search
 }
 
 func AllSearch(q string) (tweets []anaconda.Tweet) {
-	api := Authorize()
+	api := authorize()
 	var maxId int64 = 1
 	for {
 		sr, err := search(api, maxId, q)

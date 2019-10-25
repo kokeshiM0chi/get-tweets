@@ -10,7 +10,7 @@ import (
 	"time"
 )
 
-func Authorize() *anaconda.TwitterApi {
+func authorize() *anaconda.TwitterApi {
 	anaconda.SetConsumerKey(consumerKey)
 	anaconda.SetConsumerSecret(consumerSecret)
 	return anaconda.NewTwitterApi(accessToken, accessTokenSecret)
@@ -64,7 +64,6 @@ func MkFile(tweets []anaconda.Tweet) error {
 func removeDuplicate(tweets []anaconda.Tweet) (distinctTweets []anaconda.Tweet) {
 	m := make(map[int64]struct{})
 	for _, tweet := range tweets {
-		// mapでは、第二引数にその値が入っているかどうかの真偽値が入っている
 		if _, ok := m[tweet.Id]; !ok {
 			m[tweet.Id] = struct{}{}
 			distinctTweets = append(distinctTweets, tweet)

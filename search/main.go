@@ -3,6 +3,8 @@ package main
 import (
 	"fmt"
 	"os"
+	// "github.com/ssabcire/get-tweets"
+	"getTweets"
 )
 
 func main() {
@@ -12,9 +14,9 @@ func main() {
 		os.Exit(1)
 	}
 	q := os.Args[1]
-	tweets := AllSearch(q)
+	tweets := lib.AllSearch(q)
 
-	err := MkFile(tweets)
+	err := lib.MkFile(tweets)
 	if err != nil {
 		os.Exit(1)
 	}
