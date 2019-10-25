@@ -67,7 +67,7 @@ func MkFiles(tweets []anaconda.Tweet) error {
 	return nil
 }
 
-func removeDuplicate(tweets []anaconda.Tweet) (distinctTweets []anaconda.Tweet) {
+func RemoveDuplicate(tweets []anaconda.Tweet) (distinctTweets []anaconda.Tweet) {
 	m := make(map[int64]struct{})
 	for _, tweet := range tweets {
 		if _, ok := m[tweet.Id]; !ok {

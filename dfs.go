@@ -6,10 +6,25 @@ import (
 
 func ReplyDfs(api *anaconda.TwitterApi, super anaconda.Tweet, q string) (replies []anaconda.Tweet) {
 	var maxId int64 = 1
+	// ここもsearchのみでなく、限界来るまで回したいよね
 	sr, err := search(api, maxId, q)
 	if err != nil {
 		return nil
 	}
+	// for {
+	// 	sr, err := search(api, maxId, q)
+	// 	if err != nil {
+	// 		return nil
+	// 	}
+	// 	if len(sr.Statuses) < 99 {
+	// 	// 100件未満だと同じツイート群を何度も取得してしまうため
+	// 		fmt.Println("全て取得したため、取得を終了しました")
+	// 		tweets = append(tweets, sr.Statuses...)
+	// 		break
+	// 	}
+	// 	maxId = sr.Statuses[len(sr.Statuses)-1].Id - 1 //statuses末尾取得
+	// 	tweets = append(tweets, sr.Statuses...)
+	// }
 
 	for _, s := range sr.Statuses {
 		if s.InReplyToStatusID == super.Id {

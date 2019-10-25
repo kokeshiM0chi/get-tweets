@@ -51,7 +51,7 @@ func AllSearch(api *anaconda.TwitterApi, q string) (tweets []anaconda.Tweet) {
 		}
 	}
 	fmt.Printf("リプライをすべて取得しました。取得ツイート数:%d\n", len(tweets))
-	tweets = removeDuplicate(tweets)
+	tweets = RemoveDuplicate(tweets)
 	fmt.Printf("重複削除後のツイート数:%d\n", len(tweets))
 	return tweets
 }
