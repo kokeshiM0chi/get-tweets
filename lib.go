@@ -34,12 +34,12 @@ func mkDir(jsonDir string) error {
 	return nil
 }
 
-func MkFiles(tweets []anaconda.Tweet) error {
-	if err := mkDir(jsonDir); err != nil {
-		fmt.Printf("ディレクトリ作成に失敗しました. err:%s\n", err)
+func MkFiles(tweets []anaconda.Tweet) (err error) {
+	if err = mkDir(jsonDir); err != nil {
+		return err
 	}
 	for i, tweet := range tweets {
-		err := func() error {
+		err = func() error {
 			json, err := json.MarshalIndent(tweet, "", "    ")
 			if err != nil {
 				return err
@@ -47,7 +47,7 @@ func MkFiles(tweets []anaconda.Tweet) error {
 			t := time.Now()
 			file, err := os.Create(filepath.Join(
 				jsonDir, fmt.Sprintf(
-					"%v%v%v-%v%vtimeline%d.json",
+					"%v%v%v-%v%vtweet%d.json",
 					t.Year(), t.Month(), t.Day(), t.Hour(), t.Minute(), i,
 				),
 			))

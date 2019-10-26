@@ -14,7 +14,7 @@ func main() {
 	}
 	api := lib.Authorize()
 	q := os.Args[1]
-	tweets, err := lib.AllSearch(api, q)
+	tweets, err := lib.ReplyAlsoAllSearch(api, q)
 	if err != nil {
 		fmt.Printf("err: %v", err)
 		os.Exit(1)

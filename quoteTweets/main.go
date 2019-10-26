@@ -1,12 +1,49 @@
 package main
 
-import ()
+import (
+	"fmt"
+	"getTweets"
+	"github.com/ChimeraCoder/anaconda"
+	"net/url"
+	"os"
+	"strconv"
+)
 
-const flamingId = 1145843192211787776
+func main() {
+	if len(os.Args) != 2 {
+		fmt.Printf("検索キーワードを1つ付け加えて再度実行してください.\n e.g. ./twitter-search 12345678\n")
+		os.Exit(1)
+	}
+	id, err := strconv.ParseInt(os.Args[1], 10, 64)
+	if err != nil {
+		fmt.Printf("Parse Error. Args[1]: %v, err: %v\n", os.Args[1], err)
+		os.Exit(1)
+	}
+	tweets, err := getQuote(lib.Authorize(), id)
+	if err != nil {
+		fmt.Printf("err: %v", err)
+		os.Exit(1)
+	}
+	err = lib.MkFiles(tweets)
+	if err != nil {
+		fmt.Printf("make file error. err: %v\n", err)
+		os.Exit(1)
+	}
+	fmt.Println("取得したツイート群をファイルに書き込みました")
+}
 
-// とある1ツイートに対して行われている引用リツイートと、そのすべてのリプライを検索
-func getQuoteTweets() {
-	// q := fmt.Sprintf("twitter.com/%v/ -from:%v", super.User.ScreenName, super.User.ScreenName)}
-
-	// 引用リツイートに対する引用リツイートを探す関数
+// 特定ツイートに引用リツイートされたもののみを取得する(できてるか謎))
+func getQuote(api *anaconda.TwitterApi, id int64) (tweets []anaconda.Tweet, err error) {
+	// 引用リツイート検索
+	v := url.Values{}
+	tweet, err := api.GetTweet(id, v)
+	if err != nil {
+		return nil, err
+	}
+	q := fmt.Sprintf("twitter.com/%v/ -from:%v", tweet.User.ScreenName, tweet.User.ScreenName)
+	tweets, err = lib.AllSearch(api, q)
+	if err != nil {
+		return nil, err
+	}
+	return tweets, nil
 }
