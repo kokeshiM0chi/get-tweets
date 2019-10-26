@@ -42,7 +42,6 @@ func MkFiles(tweets []anaconda.Tweet) error {
 		err := func() error {
 			json, err := json.MarshalIndent(tweet, "", "    ")
 			if err != nil {
-				fmt.Printf("jsonのMarshalIndent失敗. err:%s\n", err)
 				return err
 			}
 			t := time.Now()
@@ -53,7 +52,6 @@ func MkFiles(tweets []anaconda.Tweet) error {
 				),
 			))
 			if err != nil {
-				fmt.Printf("ファイル作成失敗. err:%s\n", err)
 				return err
 			}
 			file.Write(json)

@@ -1,11 +1,6 @@
 package main
 
-import (
-	"fmt"
-	"github.com/ChimeraCoder/anaconda"
-	"net/url"
-	"os"
-)
+import ()
 
 const flamingId = 1145843192211787776
 
@@ -13,4 +8,5 @@ const flamingId = 1145843192211787776
 func getQuoteTweets() {
 	// q := fmt.Sprintf("twitter.com/%v/ -from:%v", super.User.ScreenName, super.User.ScreenName)}
 
-// 引用リツイートに対する引用リツイートを探す関数
+	// 引用リツイートに対する引用リツイートを探す関数
+}
