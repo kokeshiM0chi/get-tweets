@@ -32,16 +32,16 @@ func main() {
 	fmt.Println("取得したツイート群をファイルに書き込みました")
 }
 
-// 特定ツイートに引用リツイートされたもののみを取得する(できてるか謎))
+// 特定ツイートの中で、引用リツイートされたもののみを取得する
 func getQuote(api *anaconda.TwitterApi, id int64) (tweets []anaconda.Tweet, err error) {
-	// 引用リツイート検索
 	v := url.Values{}
 	tweet, err := api.GetTweet(id, v)
 	if err != nil {
 		return nil, err
 	}
-	q := fmt.Sprintf("twitter.com/%v/ -from:%v", tweet.User.ScreenName, tweet.User.ScreenName)
-	tweets, err = lib.AllSearch(api, q)
+	// 引用リツイート検索
+	tweets, err = lib.AllSearch(api, fmt.Sprintf(
+		"twitter.com/%v/ -from:%v", tweet.User.ScreenName, tweet.User.ScreenName), true)
 	if err != nil {
 		return nil, err
 	}

@@ -32,7 +32,7 @@ func main() {
 	fmt.Println("取得したツイート群をファイルに書き込みました")
 }
 
-// 特定ツイートに対するリプライを検索
+// 特定ツイートに対するすべてのリプライを検索
 func getReplies(api *anaconda.TwitterApi, id int64) (tweets []anaconda.Tweet, err error) {
 	v := url.Values{}
 	tweet, err := api.GetTweet(id, v)

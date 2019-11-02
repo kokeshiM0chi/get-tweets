@@ -14,13 +14,13 @@ func main() {
 	}
 	api := lib.Authorize()
 	q := os.Args[1]
-	tweets, err := lib.ReplyAlsoAllSearch(api, q)
+	tweets, err := lib.AllSearch(api, q, true)
 	if err != nil {
 		fmt.Printf("err: %v", err)
 		os.Exit(1)
 	}
 
-	err := lib.MkFiles(tweets)
+	err = lib.MkFiles(tweets)
 	if err != nil {
 		fmt.Printf("make file error. err: %v\n", err)
 		os.Exit(1)
