@@ -12,11 +12,9 @@ func main() {
 		fmt.Printf("検索キーワードを1つ付け加えて再度実行してください.\n e.g. ./twitter-search abc\n")
 		os.Exit(1)
 	}
-	api := lib.Authorize()
-	q := os.Args[1]
-	tweets, err := lib.AllSearch(api, q, true)
+	tweets, err := lib.AllSearch(lib.Authorize(), os.Args[1], true)
 	if err != nil {
-		fmt.Printf("err: %v", err)
+		fmt.Printf("error to AllSearch. error: %v\n", err)
 		os.Exit(1)
 	}
 

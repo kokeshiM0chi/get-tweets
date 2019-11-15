@@ -18,7 +18,7 @@ func Authorize() *anaconda.TwitterApi {
 
 var jsonDir = func() string {
 	user, _ := user.Current()
-	return filepath.Join(user.HomeDir, "/twitter-json_data")
+	return filepath.Join(user.HomeDir, path)
 }()
 
 func mkDir(jsonDir string) error {

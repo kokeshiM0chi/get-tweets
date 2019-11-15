@@ -11,7 +11,7 @@ import (
 
 func main() {
 	if len(os.Args) != 2 {
-		fmt.Printf("検索キーワードを1つ付け加えて再度実行してください.\n e.g. ./twitter-search 12345678\n")
+		fmt.Printf("検索キーワードを1つ付け加えて再度実行してください.\n e.g. ./allReply 12345678\n")
 		os.Exit(1)
 	}
 	id, err := strconv.ParseInt(os.Args[1], 10, 64)
@@ -21,7 +21,7 @@ func main() {
 	}
 	tweets, err := getReplies(lib.Authorize(), id)
 	if err != nil {
-		fmt.Printf("err: %v\n", err)
+		fmt.Printf("error to getReplies. err: %v\n", err)
 		os.Exit(1)
 	}
 	err = lib.MkFiles(tweets)

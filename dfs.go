@@ -1,6 +1,7 @@
 package lib
 
 import (
+	"fmt"
 	"github.com/ChimeraCoder/anaconda"
 )
 
@@ -8,6 +9,7 @@ func ReplyDfs(api *anaconda.TwitterApi, super anaconda.Tweet, q string) (replies
 	var maxId int64 = 1
 	var tweets []anaconda.Tweet
 	for {
+		fmt.Println(maxId)
 		sr, err := search(api, maxId, q)
 		if err != nil {
 			return nil

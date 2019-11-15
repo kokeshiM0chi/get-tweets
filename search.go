@@ -37,7 +37,7 @@ func AllSearch(api *anaconda.TwitterApi, q string, isGetRep bool) (tweets []anac
 		maxId = sr.Statuses[len(sr.Statuses)-1].Id - 1
 		tweets = append(tweets, sr.Statuses...)
 	}
-	fmt.Printf("取得ツイート数:%d\n", len(tweets))
+	fmt.Printf("取得ツイート数: %d\n", len(tweets))
 	if !isGetRep {
 		return tweets, nil
 	}
